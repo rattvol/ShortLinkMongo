@@ -1,0 +1,41 @@
+﻿@using ShortLink.sakila;
+
+@model Fulltable
+
+<div>
+    <h4>Форма просмотра/изменения записи</h4>
+    <hr />
+    <form id="itemedit">
+        <dl class="row">
+            <dt class="col-sm-2">
+                Длинная ссылка
+            </dt>
+            <dd class="col-sm-10">
+                <input name="LongLinkText" type="text" form="itemedit" size="100" value="@Html.DisplayFor(model => model.Longlink)" />
+            </dd>
+            <dt class="col-sm-2">
+                Короткая ссылка
+            </dt>
+            <dd class="col-sm-10">
+                <input name="ShortLinkText" type="text" form="itemedit" size="100" value="@Html.DisplayFor(model => model.Shortlink)" />
+            </dd>
+            <dt class="col-sm-2">
+                Дата генерации/изменения
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+            <dt class="col-sm-2">
+                Количество переходов
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Count)
+            </dd>
+        </dl>         
+        <input id="SaveData" form="itemedit" type="submit" value="Сохранить изменения" asp-action="LinkSaved" asp-route-id="@Model.Id"/>
+        @ViewData["saved"]
+    </form>
+</div>
+<div>
+    <a asp-action="Links">Вернуться к перечню</a>
+</div>

@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Ввод ссылки";
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">
+        Сокращение cсылок
+    </h1>
+    <div>
+        На этой странице Вы можете сделать из длинной и сложной ссылки простую.
+    </div>
+    <form id="cutLink">
+        <div class="input-group">
+            <input type="text" class="form-control" form="cutLink" placeholder="Длинная ссылка" aria-describedby="basic-addon2" name="LongLink" required>
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" form="cutLink" type="submit" asp-action="CutLink">Сократить</button>
+            </span>
+        </div>
+    </form>
+    <div class="lead" >
+        <h3 style="padding-top: 100px">Сокращенная ссылка:</h3>
+        <a class="text-center" href="@ViewData["ShortLink"]">@ViewData["ShortLink"]</a>
+    </div>
+    <div>
+        @ViewData["SavingResult"]
+    </div>
+</div>

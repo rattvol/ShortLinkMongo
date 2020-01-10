@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ShortLink.sakila.Fulltable>
+
+<p>
+    <a asp-action="Index">Создать новую сокращенную ссылку</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                Длинная ссылка
+            </th>
+            <th scope="col">
+                Короткая ссылка
+            </th>
+            <th scope="col">
+                Дата генерации
+            </th>
+            <th scope="col">
+                Количество переходов
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Longlink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Shortlink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                <a asp-action="Link" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Deleted" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
