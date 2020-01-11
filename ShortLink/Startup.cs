@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
-using ShortLink.sakila;
 using System;
 
 namespace ShortLink
@@ -23,19 +20,19 @@ namespace ShortLink
             Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+        public  IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             string connectionLine = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContextPool<shortlinkContext>(options => options
-                // replace with your connection string
-                .UseMySql(connectionLine, mySqlOptions => mySqlOptions
-                    // replace with your Server Version and Type
-                    .ServerVersion(new ServerVersion(new Version(8, 0, 18), ServerType.MySql))
-            ));
+            ////services.AddDbContextPool<shortlinkContext>(options => options
+            ////    // replace with your connection string
+            ////    .UseMySql(connectionLine, mySqlOptions => mySqlOptions
+            ////        // replace with your Server Version and Type
+            ////        .ServerVersion(new ServerVersion(new Version(8, 0, 18), ServerType.MySql))
+            ////));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
