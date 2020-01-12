@@ -19,12 +19,6 @@ namespace ShortLink.Controllers
             ViewData["SavingResult"]= "";
             return View();
         }
-        //вывод списка ссылок
-        //public IActionResult Links()
-        //{
-        //    List<LinkTable> fulltable = linkscontext.GetAll();
-        //    return View(fulltable);
-        //}
         public async Task<IActionResult> Links(string search)
         {
             List<LinkTable> fulltable;
@@ -83,17 +77,11 @@ namespace ShortLink.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        ////обрезка
+        //обрезка
         public string LinkCuting(string longLink)
         {
             string htp = Request.Scheme +"://"+ Request.Host.Value + "/";
-            int maxlength = htp.Length + 5;
-            //if (longLink.Length <= maxlength)//блокировка преобразования изначально коротких ссылок
-            //{
-            //    @ViewData["SavingResult"] = "Строка и так короткая, преобразование не требуется";
-            //    return longLink;
-            //}
-            int linkLength = longLink.Length > maxlength ? maxlength : longLink.Length;
+            int maxlength = htp.Length + 5;//общая длина ссылки: фиксированная часть+генерируемая часть
             char[] chars = "!0123456789@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
             StringBuilder shortLink = new StringBuilder(maxlength);
             Random random = new Random();
@@ -106,15 +94,15 @@ namespace ShortLink.Controllers
                 {
                     shortLink.Append(chars[random.Next(0, chars.Length - 1)]);
                 }
-                while (shortLink.Length <= linkLength);
+                while (shortLink.Length <= maxlength);
                 haveSame = linkscontext.GetByShortLink(shortLink.ToString());
             } while (haveSame);
             AddItem(longLink, shortLink.ToString());
-            @ViewData["SavingResult"] = "Строка укорочена и записана в базу";
+            @ViewData["SavingResult"] = "Короткая ссылка создана и записана в базу";
 
             return shortLink.ToString();
         }
-        ////сохранение
+        //сохранение
         public async void AddItem(string longLink, string shortLink)
         {
             LinkTable newItem = new LinkTable();
