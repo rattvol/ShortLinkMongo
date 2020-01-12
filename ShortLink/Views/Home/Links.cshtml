@@ -1,8 +1,17 @@
 ﻿@model IEnumerable<LinkTable>
-<base target="_blank">
-<p>
-    <a asp-action="Index">Создать новую сокращенную ссылку</a>
-</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <a asp-action="Index">Создать новую сокращенную ссылку</a>
+        </div>
+        <div class="col text-right">
+            <form class="form-inline mt-2 mt-md-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" name="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -26,10 +35,10 @@
         {
             <tr>
                 <td>
-                    <a href="@item.Longlink">@item.Longlink</a>
+                    <a target="_blank" href="@item.Longlink">@item.Longlink</a>
                 </td>
                 <td>
-                    <a href="@item.Shortlink">@item.Shortlink</a>
+                    <a target="_blank" href="@item.Shortlink">@item.Shortlink</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Date)

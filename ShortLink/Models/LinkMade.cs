@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using System;
@@ -15,8 +16,11 @@ namespace ShortLink.Models
 
         public LinkMade()
         {
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json");
+            IConfiguration Configuration = builder.Build();
             // строка подключения
-            string connectionString = "mongodb://localhost:27017/shortlink";
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             var connection = new MongoUrlBuilder(connectionString);
             // получаем клиента для взаимодействия с базой данных
             MongoClient client = new MongoClient(connectionString);
@@ -28,12 +32,21 @@ namespace ShortLink.Models
             Links = database.GetCollection<LinkTable>("LinkTable");
 
         }
-        public List<LinkTable> GetAll()//выборка для общего списка
+        public async Task<List<LinkTable>> GetAll()//выборка для общего списка
         {
             // строитель фильтров
             var filter = new BsonDocument(); // фильтр для выборки всех документов
 
-            return Links.Find(filter).ToList();
+            return await Links.Find(filter).ToListAsync();
+        }
+        public async Task<List<LinkTable>> GetSearch(string line)//выборка для общего списка
+        {
+            // строитель фильтров
+            
+                var builder = new FilterDefinitionBuilder<LinkTable>();
+                var filters = builder.Or(builder.Regex("Longlink", line), builder.Regex("Shortlink", line)); // фильтр для выборки всех документов  
+                return await Links.Find(filters).ToListAsync();
+
         }
 
         public Task<List<LinkTable>> GetShortLink(string link)//получение короткой сслыки по длинной

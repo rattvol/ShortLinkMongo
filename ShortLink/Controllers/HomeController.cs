@@ -20,9 +20,16 @@ namespace ShortLink.Controllers
             return View();
         }
         //вывод списка ссылок
-        public IActionResult Links()
+        //public IActionResult Links()
+        //{
+        //    List<LinkTable> fulltable = linkscontext.GetAll();
+        //    return View(fulltable);
+        //}
+        public async Task<IActionResult> Links(string search)
         {
-            List<LinkTable> fulltable = linkscontext.GetAll();
+            List<LinkTable> fulltable;
+            if (search != null)   fulltable = await linkscontext.GetSearch(search);
+            else fulltable = await linkscontext.GetAll();
             return View(fulltable);
         }
         //форма редактирования ссылки
