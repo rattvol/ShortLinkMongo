@@ -39,7 +39,6 @@ namespace ShortLink.Controllers
             newItem.Longlink = LongLinkText;
             newItem.Shortlink = ShortLinkText;
             newItem.Date = DateTime.Now;
-            newItem.Deleted = 0;
             await linkscontext.Update(newItem);
             ViewData["saved"] = "Изменения сохранены в " + DateTime.Now.TimeOfDay.ToString("hh\\:mm");
             List<LinkTable> fulltable = linkscontext.GetById(id);
@@ -68,20 +67,14 @@ namespace ShortLink.Controllers
         //}
 
         ////переадресация
-        //[Route("/{code}")]
-        //public IActionResult Redir(string code)
-        //{
-        //    var result = _context.Linktable
-        //        .Where(c => c.Shortlink.Contains(code)) 
-        //        .First();
-        //    int i = result.Id;
-        //    var logItem = _context.Log
-        //       .Where(b => b.IdLink == i)
-        //        .First();
-        //    logItem.Count++;
-        //    _context.SaveChanges();
-        //    return Redirect(result.Longlink);
-        //}
+        [Route("/{code}")]
+        public IActionResult Redir(string code)
+        {
+            string link = Request.Scheme + "://" + Request.Host.Value + "/"+ code;
+            List<LinkTable> result = linkscontext.GetLongLink(link).Result;
+            link = result[0].Longlink;
+            return Redirect(link);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -91,8 +84,7 @@ namespace ShortLink.Controllers
         ////обрезка
         public string LinkCuting(string longLink)
         {
-            string htp = Request.IsHttps ? "https://" : "http://";
-            htp += Request.Host.Value + "/";
+            string htp = Request.Scheme +"://"+ Request.Host.Value + "/";
             int maxlength = htp.Length + 5;
             if (longLink.Length <= maxlength)
             {
@@ -127,7 +119,6 @@ namespace ShortLink.Controllers
             newItem.Longlink = longLink;
             newItem.Shortlink = shortLink.ToString();
             newItem.Date = DateTime.Now;
-            newItem.Deleted = 0;
             await linkscontext.Create(newItem);
         }
     }

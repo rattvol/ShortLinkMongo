@@ -29,7 +29,6 @@ namespace ShortLink.Models
         public string Longlink { get; set; }
         public string Shortlink { get; set; }
         public DateTime? Date { get; set; }
-        public sbyte? Deleted { get; set; }
         public int? Count { get; set; }
 
     }

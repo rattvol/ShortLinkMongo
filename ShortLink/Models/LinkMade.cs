@@ -55,18 +55,24 @@ namespace ShortLink.Models
             bool result = lines.Count() > 0;
             return result;
         }
+        public async Task<List<LinkTable>> GetLongLink(string link)//получение длинной сслыки по короткой
+        {
+            var filter = new BsonDocument("Shortlink", link);
+            var result = await Links.FindAsync(filter);
+            return result.ToList();
+        }
 
-        //// добавление документа
+        //// добавление записи
         public async Task Create(LinkTable lt)
         {
             await Links.InsertOneAsync(lt);
         }
-        //// обновление документа
+        //// обновление записи
         public async Task Update(LinkTable lt)
         {
             await Links.ReplaceOneAsync(new BsonDocument("_id", new ObjectId(lt.Id)), lt);
         }
-        //// удаление документа
+        //// пометка как удаленной записи
         public async Task Remove(string id)
         {
             await Links.DeleteOneAsync(new BsonDocument("_id", new ObjectId(id)));
