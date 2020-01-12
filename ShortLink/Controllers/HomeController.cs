@@ -25,7 +25,7 @@ namespace ShortLink.Controllers
             List<LinkTable> fulltable = linkscontext.GetAll();
             return View(fulltable);
         }
-        ////форма редактирования ссылки
+        //форма редактирования ссылки
         public IActionResult Link(string id)
         {
             List<LinkTable> fulltable = linkscontext.GetById(id);
@@ -60,12 +60,6 @@ namespace ShortLink.Controllers
             return View("Index");
         }
 
-        //public string GetByLongLink(string LL)
-        //{
-        //    List<Lin> result = linkscontext.GetShortLink(LL);
-        //    return result[0].Shortlink;
-        //}
-
         ////переадресация
         [Route("/{code}")]
         public IActionResult Redir(string code)
@@ -73,6 +67,7 @@ namespace ShortLink.Controllers
             string link = Request.Scheme + "://" + Request.Host.Value + "/"+ code;
             List<LinkTable> result = linkscontext.GetLongLink(link).Result;
             link = result[0].Longlink;
+            linkscontext.CountOn(result[0]);
             return Redirect(link);
         }
 
@@ -86,11 +81,11 @@ namespace ShortLink.Controllers
         {
             string htp = Request.Scheme +"://"+ Request.Host.Value + "/";
             int maxlength = htp.Length + 5;
-            if (longLink.Length <= maxlength)
-            {
-                @ViewData["SavingResult"] = "Строка и так короткая, преобразование не требуется";
-                return longLink;
-            }
+            //if (longLink.Length <= maxlength)//блокировка преобразования изначально коротких ссылок
+            //{
+            //    @ViewData["SavingResult"] = "Строка и так короткая, преобразование не требуется";
+            //    return longLink;
+            //}
             int linkLength = longLink.Length > maxlength ? maxlength : longLink.Length;
             char[] chars = "!0123456789@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
             StringBuilder shortLink = new StringBuilder(maxlength);
@@ -102,7 +97,7 @@ namespace ShortLink.Controllers
                 shortLink.Append(htp);
                 do
                 {
-                    shortLink.Append(chars[random.Next(0, chars.Length - 1)]);//never use bitwise opertions on server!
+                    shortLink.Append(chars[random.Next(0, chars.Length - 1)]);
                 }
                 while (shortLink.Length <= linkLength);
                 haveSame = linkscontext.GetByShortLink(shortLink.ToString());
@@ -119,7 +114,9 @@ namespace ShortLink.Controllers
             newItem.Longlink = longLink;
             newItem.Shortlink = shortLink.ToString();
             newItem.Date = DateTime.Now;
+            newItem.Count = 0;
             await linkscontext.Create(newItem);
         }
+       
     }
 }

@@ -62,21 +62,27 @@ namespace ShortLink.Models
             return result.ToList();
         }
 
-        //// добавление записи
+        // добавление записи
         public async Task Create(LinkTable lt)
         {
             await Links.InsertOneAsync(lt);
         }
-        //// обновление записи
+        // обновление записи
         public async Task Update(LinkTable lt)
         {
             await Links.ReplaceOneAsync(new BsonDocument("_id", new ObjectId(lt.Id)), lt);
         }
-        //// пометка как удаленной записи
+        // пометка как удаленной записи
         public async Task Remove(string id)
         {
             await Links.DeleteOneAsync(new BsonDocument("_id", new ObjectId(id)));
         }
-       
+        public async void CountOn(LinkTable newdoc)
+        {
+            int newcount = newdoc.Count+1;
+            var updateDef = Builders<LinkTable>.Update.Set("Count", newcount);
+            await Links.UpdateOneAsync(new BsonDocument("Shortlink", newdoc.Shortlink), updateDef);
+        }
+
     }
 }

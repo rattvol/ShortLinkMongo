@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<LinkTable>
-
+<base target="_blank">
 <p>
     <a asp-action="Index">Создать новую сокращенную ссылку</a>
 </p>
@@ -22,25 +22,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Longlink)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Shortlink)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Count)
-            </td>
-            <td>
-                <a asp-action="Link" asp-route-id="@item.Id">Изменить</a> |
-                <a asp-action="Deleted" asp-route-id="@item.Id">Удалить</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@item.Longlink">@item.Longlink</a>
+                </td>
+                <td>
+                    <a href="@item.Shortlink">@item.Shortlink</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    <a asp-action="Link" asp-route-id="@item.Id">Изменить</a> |
+                    <a asp-action="Deleted" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
